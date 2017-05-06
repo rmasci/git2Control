@@ -1,0 +1,37 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;git2Control&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../src/github.com" />
+      <root url="file://$PROJECT_DIR$/../src/git.eclipse.org" />
+      <root url="file://$PROJECT_DIR$/../src/sigint.ca" />
+      <root url="file://$PROJECT_DIR$/../src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../src/code.google.com" />
+      <root url="file://$PROJECT_DIR$/../src/github" />
+      <root url="file://$PROJECT_DIR$/../src/codecloud.web.att.com" />
+      <root url="file://$PROJECT_DIR$/../src/mig.ninja" />
+      <root url="file://$PROJECT_DIR$/../src/npf.io" />
+      <root url="file://$PROJECT_DIR$/../src/launchpad.net" />
+      <root url="file://$PROJECT_DIR$/../src/9fans.net" />
+      <root url="file://$PROJECT_DIR$/../src/sourcegraph.com" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../src/github.com" />
+      <root url="file://$PROJECT_DIR$/../src/git.eclipse.org" />
+      <root url="file://$PROJECT_DIR$/../src/sigint.ca" />
+      <root url="file://$PROJECT_DIR$/../src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../src/code.google.com" />
+      <root url="file://$PROJECT_DIR$/../src/github" />
+      <root url="file://$PROJECT_DIR$/../src/codecloud.web.att.com" />
+      <root url="file://$PROJECT_DIR$/../src/mig.ninja" />
+      <root url="file://$PROJECT_DIR$/../src/npf.io" />
+      <root url="file://$PROJECT_DIR$/../src/launchpad.net" />
+      <root url="file://$PROJECT_DIR$/../src/9fans.net" />
+      <root url="file://$PROJECT_DIR$/../src/sourcegraph.com" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
