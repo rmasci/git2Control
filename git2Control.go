@@ -73,9 +73,18 @@ func main() {
 		bod, hstat := ctlCamera(connIp, "2017", "")
 		log.Printf("Status: %s, %s\n", bod, hstat)
 	default:
-			fmt.Printf("Running Command: %s with parameter: %s\n")
-		bod, hstat := ctlCamera(connIp, cmd, "par="+camPar)
-		log.Printf("Status: %s, %s\n", bod, hstat)
+		var bod,hstat string
+		if cmd != "" {
+			if camPar != "" {
+				fmt.Printf("Running Command: %s with parameter: %s\n")
+				bod, hstat = ctlCamera(connIp, cmd, "par="+camPar)
+			} else {
+				fmt.Printf("Running Command: %s\n")
+				bod, hstat = ctlCamera(connIp, cmd, "")
+				
+			}
+			log.Printf("Status: %s, %s\n", bod, hstat)
+		}
 	}
 
 }
@@ -100,6 +109,8 @@ func myIpIs() string {
 }
 
 func findIp(cidrIp string) string {
+	fileInfo:=os.Stat("git2IP.txt")
+	fileTime:=fileInfo.ModTime()
 	if verb {
 		fmt.Printf("CiderIP: %v\n", cidrIp)
 	}
