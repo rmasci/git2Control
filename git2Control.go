@@ -1,5 +1,22 @@
 package main
 
+/*
+|------------------------------------------------------------------------
+| This program is free software: you can redistribute it and/or modify  |
+| it under the terms of the GNU General Public License as published by  |
+| the Free Software Foundation, version 3 of the License.               |
+|                                                                       |
+| This program is distributed in the hope that it will be useful,       |
+| but WITHOUT ANY WARRANTY; without even the implied warranty of        |
+| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         |
+| GNU General Public License for more details.                          |
+|                                                                       |
+| You should have received a copy of the GNU General Public License     |
+| along with this program.  If not, see <http://www.gnu.org/licenses/>. |
+|------------------------------------------------------------------------
+*/
+
+
 import (
 	"encoding/xml"
 	"fmt"
@@ -33,29 +50,37 @@ func main() {
 	pflag.BoolVarP(&help, "help", "h", false, "Help")
 	pflag.Parse()
 	if help {
-		fmt.Printf("Commands:\n\tstartCam\n\tstopCam\n\ttakePic\t\trecStatus\n\n")
+		fmt.Printf("Commands:startCam\n\tstopCam\n\ttakePic\n\trecStatus\n\n")
 		pflag.PrintDefaults()
 		os.Exit(0)
 	}
-	myip := myIpIs()
-	cidrIp := readConf()
+	myip:=myIpIs()
+	cidrIp,fresh := readConf()
+	// if no file exists -- the scan starts with the solo's address Camera should be
+	// above this address
 	if cidrIp == "" {
 		cidrIp = myip
 	}
-	connIp = findIp(cidrIp)
-	if connIp == "" {
-		if myip == cidrIp {
-			fmt.Println("Guess I didn't find anything...")
-			os.Exit(1)
-		} else {
-			connIp = findIp(myip)
-			if connIp == "" {
-				fmt.Println("Guess I didn't find anything...")
+	// if the config file is 'fresh' or less than 25 min old -- run with it.
+	// most flights last for less than 25 min.
+	if fresh {
+		connIp=strings.Split(cidrIp,"/")[0]
+	} else {
+		connIp = findIp(cidrIp)
+		if connIp == "" {
+			if myip == cidrIp {
+				fmt.Println("I can't find the camera")
 				os.Exit(1)
+			} else {
+				connIp = findIp(myip)
+				if connIp == "" {
+					fmt.Println("I can't find the camera")
+					os.Exit(1)
+				}
 			}
 		}
+		writeConf(connIp)
 	}
-	writeConf(connIp)
 	switch camFunc {
 	case "startCam":
 		fmt.Printf("Starting Camera\n")
@@ -109,10 +134,9 @@ func myIpIs() string {
 }
 
 func findIp(cidrIp string) string {
-	fileInfo:=os.Stat("git2IP.txt")
-	fileTime:=fileInfo.ModTime()
+
 	if verb {
-		fmt.Printf("CiderIP: %v\n", cidrIp)
+		fmt.Printf("CidrIP: %v\n", cidrIp)
 	}
 	toIp := 254
 	tmOut := 100 * time.Millisecond
@@ -172,21 +196,31 @@ func ctlCamera(connIp, cmd, par string) (cmdStat, hStat string) {
 	return cmdStat, hStat
 }
 
-func readConf() (cidrIp string) {
+func readConf() (cidrIp string, fresh bool) {
+	fresh = false
 	curDir, err := os.Getwd()
-	errorHandle(err, "Get Current Dire to write file")
+	errorHandle(err, "Get Current Dir to write file")
 	fileName := fmt.Sprintf("%v/git2IP.txt", curDir)
 	if verb {
 		fmt.Printf("Reading File: %v\n", fileName)
 	}
 	retStr, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return ""
+		return "",fresh
 	}
 	if verb {
 		fmt.Printf("Conn Ip: %v\n", string(retStr))
 	}
-	return string(retStr)
+	// find out if the conf file is fresh
+	// Test time.. If < 25 min return w/o scan
+	nowTime:=time.Now().Unix()
+	fileInfo,err:=os.Stat("git2IP.txt")
+	errorHandle(err,"os.Stat -- couldn't stat file")
+	fileTime:=fileInfo.ModTime().Unix()
+	if nowTime - fileTime< 1500 {
+		fresh=true
+	}
+	return string(retStr),fresh
 }
 
 func writeConf(camIp string) {
