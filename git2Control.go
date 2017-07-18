@@ -14,8 +14,8 @@ package main
 | You should have received a copy of the GNU General Public License     |
 | along with this program.  If not, see <http://www.gnu.org/licenses/>. |
 |------------------------------------------------------------------------
+Written by Richard Masci.
 */
-
 
 import (
 	"encoding/xml"
@@ -50,12 +50,14 @@ func main() {
 	pflag.BoolVarP(&help, "help", "h", false, "Help")
 	pflag.Parse()
 	if help {
+		fmt.Printf("Git2Control written by Richard Masci. https://github.com/rmasci/git2Control\n\n")
 		fmt.Printf("Commands:startCam\n\tstopCam\n\ttakePic\n\trecStatus\n\n")
+
 		pflag.PrintDefaults()
 		os.Exit(0)
 	}
-	myip:=myIpIs()
-	cidrIp,fresh := readConf()
+	myip := myIpIs()
+	cidrIp, fresh := readConf()
 	// if no file exists -- the scan starts with the solo's address Camera should be
 	// above this address
 	if cidrIp == "" {
@@ -64,7 +66,7 @@ func main() {
 	// if the config file is 'fresh' or less than 25 min old -- run with it.
 	// most flights last for less than 25 min.
 	if fresh {
-		connIp=strings.Split(cidrIp,"/")[0]
+		connIp = strings.Split(cidrIp, "/")[0]
 	} else {
 		connIp = findIp(cidrIp)
 		if connIp == "" {
@@ -92,13 +94,13 @@ func main() {
 		log.Printf("Status: %s, %s\n", bod, hstat)
 	case "recStatus":
 		bod, hstat := ctlCamera(connIp, "2001", "")
-		fmt.Printf("Camera Rec Status:%s,%s\n",bod,hstat)
+		fmt.Printf("Camera Rec Status:%s,%s\n", bod, hstat)
 	case "takePic":
 		fmt.Printf("Take picture.\n")
 		bod, hstat := ctlCamera(connIp, "2017", "")
 		log.Printf("Status: %s, %s\n", bod, hstat)
 	default:
-		var bod,hstat string
+		var bod, hstat string
 		if cmd != "" {
 			if camPar != "" {
 				fmt.Printf("Running Command: %s with parameter: %s\n")
@@ -106,7 +108,7 @@ func main() {
 			} else {
 				fmt.Printf("Running Command: %s\n")
 				bod, hstat = ctlCamera(connIp, cmd, "")
-				
+
 			}
 			log.Printf("Status: %s, %s\n", bod, hstat)
 		}
@@ -206,21 +208,21 @@ func readConf() (cidrIp string, fresh bool) {
 	}
 	retStr, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return "",fresh
+		return "", fresh
 	}
 	if verb {
 		fmt.Printf("Conn Ip: %v\n", string(retStr))
 	}
 	// find out if the conf file is fresh
 	// Test time.. If < 25 min return w/o scan
-	nowTime:=time.Now().Unix()
-	fileInfo,err:=os.Stat("git2IP.txt")
-	errorHandle(err,"os.Stat -- couldn't stat file")
-	fileTime:=fileInfo.ModTime().Unix()
-	if nowTime - fileTime< 1500 {
-		fresh=true
+	nowTime := time.Now().Unix()
+	fileInfo, err := os.Stat("git2IP.txt")
+	errorHandle(err, "os.Stat -- couldn't stat file")
+	fileTime := fileInfo.ModTime().Unix()
+	if nowTime-fileTime < 1500 {
+		fresh = true
 	}
-	return string(retStr),fresh
+	return string(retStr), fresh
 }
 
 func writeConf(camIp string) {
