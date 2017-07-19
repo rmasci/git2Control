@@ -1,0 +1,2 @@
+SSID:SoloLink_rgm 
+WPA2:JesusSaves

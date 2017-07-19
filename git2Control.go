@@ -42,9 +42,9 @@ type xmlParse struct {
 func main() {
 	var camFunc string
 	var connIp, camPar, cmd string
-	pflag.StringVarP(&camFunc, "cam", "c", "startCam", "Stop the camera. Default is to start.")
-	pflag.StringVarP(&cmd, "cmd", "C", "", "Send camera command. (2001, 20017 etc... see Novatek API.")
-	pflag.StringVarP(&camPar, "par", "x", "", "Parameter to send with command")
+	pflag.StringVarP(&camFunc, "cam", "c", "", "Send commands to the camera. Default is to start")
+	pflag.StringVarP(&cmd, "cmd", "C", "2001", "Send camera command. (2001, 20017 etc... see Novatek API.")
+	pflag.StringVarP(&camPar, "par", "x", "1", "Parameter to send with command")
 	pflag.StringVarP(&searchIP, "searchSub", "i", "10.1.1", "First three octets of subnet to search for.")
 	pflag.BoolVarP(&verb, "verbose", "v", false, "Verbose")
 	pflag.BoolVarP(&help, "help", "h", false, "Help")
